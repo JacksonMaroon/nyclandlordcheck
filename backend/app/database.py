@@ -6,19 +6,17 @@ from app.config import get_settings
 
 # Debug: Print raw environment variable BEFORE any processing
 raw_db_url = os.getenv("DATABASE_URL", "NOT_SET")
-print(f"DEBUG: Raw DATABASE_URL from env: {raw_db_url[:60]}...", file=sys.stderr, flush=True)
+print(f"DEBUG: Raw DATABASE_URL from env: {raw_db_url}", file=sys.stderr, flush=True)
 
 settings = get_settings()
 
 # Debug: Print after pydantic processing
-print(f"DEBUG: After pydantic: {settings.database_url[:60]}...", file=sys.stderr, flush=True)
+print(f"DEBUG: After pydantic: {settings.database_url}", file=sys.stderr, flush=True)
 
-# Transform DATABASE_URL for asyncpg driver compatibility
-# Railway provides postgresql:// URLs, but SQLAlchemy with asyncpg needs postgresql+asyncpg://
+# The pydantic validator already transforms postgresql:// to postgresql+asyncpg://
+# So we just use the settings value directly
 database_url = settings.database_url
-if database_url.startswith("postgresql://"):
-    database_url = database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
-    print(f"DEBUG: After transform: {database_url[:60]}...", file=sys.stderr, flush=True)
+print(f"DEBUG: Using database_url: {database_url}", file=sys.stderr, flush=True)
 
 engine = create_async_engine(
     database_url,
