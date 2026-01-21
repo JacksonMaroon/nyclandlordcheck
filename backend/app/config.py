@@ -34,10 +34,20 @@ class Settings(BaseSettings):
     @classmethod
     def convert_database_url(cls, v: str) -> str:
         """Convert postgresql:// or postgres:// to postgresql+asyncpg:// for async support."""
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Raw DATABASE_URL value: {v[:50]}...")  # Log first 50 chars (mask credentials)
+
         if v.startswith("postgresql://"):
-            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+            converted = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+            logger.info(f"Converted postgresql:// to postgresql+asyncpg://")
+            return converted
         elif v.startswith("postgres://"):
-            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+            converted = v.replace("postgres://", "postgresql+asyncpg://", 1)
+            logger.info(f"Converted postgres:// to postgresql+asyncpg://")
+            return converted
+
+        logger.info(f"No conversion needed, URL starts with: {v[:20]}")
         return v
 
     class Config:
