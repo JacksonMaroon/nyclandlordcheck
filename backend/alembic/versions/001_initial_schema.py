@@ -9,7 +9,6 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from geoalchemy2 import Geometry
 
 
 # revision identifiers, used by Alembic.
@@ -20,8 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Enable required PostgreSQL extensions
-    op.execute('CREATE EXTENSION IF NOT EXISTS postgis')
+    # Enable required PostgreSQL extensions (PostGIS removed - not available on Railway)
     op.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm')
 
     # Create buildings table
@@ -41,7 +39,7 @@ def upgrade() -> None:
         sa.Column('building_class', sa.String(10)),
         sa.Column('latitude', sa.Float()),
         sa.Column('longitude', sa.Float()),
-        sa.Column('geom', Geometry('POINT', srid=4326)),
+        # Note: geom column removed - PostGIS not available on Railway
         sa.Column('created_at', sa.DateTime(), server_default=sa.func.now()),
         sa.Column('updated_at', sa.DateTime(), server_default=sa.func.now(), onupdate=sa.func.now()),
     )

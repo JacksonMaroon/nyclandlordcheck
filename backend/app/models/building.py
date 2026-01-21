@@ -1,6 +1,5 @@
 from sqlalchemy import Column, String, Integer, Float, DateTime, Index
 from sqlalchemy.orm import relationship
-from geoalchemy2 import Geometry
 from datetime import datetime
 from app.database import Base
 
@@ -22,7 +21,7 @@ class Building(Base):
     building_class = Column(String(10))
     latitude = Column(Float)
     longitude = Column(Float)
-    geom = Column(Geometry("POINT", srid=4326))
+    # Note: geom column removed - PostGIS not available on Railway
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
