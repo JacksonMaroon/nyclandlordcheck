@@ -1,16 +1,39 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getWorstLandlords } from '@/lib/api';
 import { cn, getGradeColor, formatNumber, formatScore } from '@/lib/utils';
-import { Trophy, AlertTriangle, Building } from 'lucide-react';
+import { Trophy, AlertTriangle, Building, Loader2 } from 'lucide-react';
+import type { LeaderboardLandlord } from '@/lib/types';
 
-export const metadata = {
-  title: 'Worst Landlords in NYC | IsMyLandlordShady.nyc',
-  description:
-    'See the worst-rated landlords in New York City based on their portfolio performance.',
-};
+export default function WorstLandlordsPage() {
+  const [landlords, setLandlords] = useState<LeaderboardLandlord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function WorstLandlordsPage() {
-  const landlords = await getWorstLandlords({ limit: 100 });
+  useEffect(() => {
+    getWorstLandlords({ limit: 100 })
+      .then(setLandlords)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16 flex justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <p className="text-red-600">Failed to load landlords: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
