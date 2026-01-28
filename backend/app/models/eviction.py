@@ -18,7 +18,7 @@ class Eviction(Base):
     marshal_last_name = Column(String(100))
     residential_commercial = Column(String(20))
     borough = Column(String(50))
-    ejectment = Column(String(10))
+    ejectment = Column(String(50))
     eviction_zip = Column(String(20))
     scheduled_status = Column(String(50))
     latitude = Column(String(50))
