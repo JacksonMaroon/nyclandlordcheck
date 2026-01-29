@@ -140,7 +140,7 @@ class BuildingService:
             JOIN registration_contacts rc ON hr.registration_id = rc.registration_id
             LEFT JOIN owner_portfolios op ON rc.owner_portfolio_id = op.id
             WHERE hr.bbl = :bbl
-            AND rc.contact_type = 'Owner'
+            AND rc.contact_type IN ('CorporateOwner', 'HeadOfficer', 'IndividualOwner', 'JointOwner', 'Owner')
             ORDER BY hr.last_registration_date DESC NULLS LAST
             LIMIT 1
         """)
