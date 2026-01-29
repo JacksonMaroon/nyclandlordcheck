@@ -11,7 +11,7 @@ from app.database import engine, Base, get_db
 from app.logging_config import setup_logging, get_logger
 from app.middleware import RequestLoggingMiddleware, ErrorHandlingMiddleware
 from app.cache import close_cache
-from pipeline.runner import run_all, run_extractor, EXTRACTORS
+from pipeline.runner import run_all, run_extractor, run_scoring, EXTRACTORS
 
 # Set up logging first
 setup_logging()
@@ -122,3 +122,11 @@ async def trigger_pipeline(
         logger.info(f"Received full pipeline trigger request. Full refresh: {full_refresh}")
         background_tasks.add_task(run_all, full_refresh=full_refresh)
         return {"message": "Full pipeline triggered in background", "full_refresh": full_refresh}
+
+
+@app.post("/admin/pipeline/scoring")
+async def trigger_scoring(background_tasks: BackgroundTasks):
+    """Trigger scoring recalculation as a background task."""
+    logger.info("Received scoring trigger request")
+    background_tasks.add_task(run_scoring)
+    return {"message": "Scoring triggered in background"}
