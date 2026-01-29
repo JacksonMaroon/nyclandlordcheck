@@ -61,7 +61,10 @@ class EntityResolutionService:
             func.count(RegistrationContact.id).label("contact_count"),
         ).where(
             RegistrationContact.name_hash.isnot(None),
-            RegistrationContact.contact_type.in_(["Owner", "HeadOfficer", "IndividualOwner"]),
+            RegistrationContact.contact_type.in_([
+                "Owner", "HeadOfficer", "IndividualOwner",
+                "CorporateOwner", "JointOwner", "Officer", "Shareholder"
+            ]),
         ).group_by(
             RegistrationContact.name_hash,
             RegistrationContact.full_name,
