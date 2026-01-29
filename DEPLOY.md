@@ -1,34 +1,6 @@
 # Deployment Guide
 
-## Deploy to Railway (Recommended)
-
-### Web Interface Method:
-
-1. Go to https://railway.app and sign up/login
-2. Click "New Project"
-3. Select "Deploy from GitHub repo"
-4. Connect GitHub and select `JacksonMaroon/ismylandlordshady`
-5. Railway will auto-detect the backend using `railway.json`
-6. Add PostgreSQL database:
-   - Click "New" → "Database" → "Add PostgreSQL"
-7. Configure environment variables in Railway dashboard:
-   ```
-   DATABASE_URL=${{Postgres.DATABASE_URL}}
-   REDIS_URL=
-   LOG_LEVEL=INFO
-   ```
-8. Railway will provide a public URL (e.g., `https://your-app.railway.app`)
-
-### CLI Method (if logged in):
-
-```bash
-railway login
-railway init
-railway add --database postgresql
-railway up
-```
-
-## Deploy to DigitalOcean (App Platform)
+## Deploy to DigitalOcean (App Platform) - Recommended
 
 This repo includes an App Platform spec at `digitalocean/app.yaml` that points at the FastAPI backend in `backend/`, and defines a post-deploy migration job.
 
@@ -65,7 +37,7 @@ doctl auth init
 doctl apps create --spec digitalocean/app.yaml
 doctl apps list
 ```
-This `doctl apps create --spec ...` flow is supported by DigitalOcean’s CLI.
+This `doctl apps create --spec ...` flow is supported by DigitalOcean's CLI.
 
 ## Deploy to Render
 
@@ -84,7 +56,7 @@ Once your backend is deployed, configure the frontend:
    ```bash
    cd frontend
    vercel env add NEXT_PUBLIC_API_URL production
-   # Enter your backend URL: https://your-backend.railway.app
+   # Enter your backend URL: https://your-backend.ondigitalocean.app
    ```
 
 2. Redeploy frontend:
@@ -98,7 +70,7 @@ After deployment, you need to:
 
 1. Run database migrations:
    ```bash
-   # SSH into your service or use Railway/Render shell
+   # SSH into your service or use Render shell
    cd backend
    alembic upgrade head
    ```
@@ -106,14 +78,14 @@ After deployment, you need to:
 2. Run the data pipeline to populate the database:
    ```bash
    cd backend
-   python -m pipeline.runner --extraction --entity-resolution --scoring
+   python -m pipeline.runner --dataset all --entity-resolution --scoring
    ```
 
 Note: The full pipeline takes ~30 minutes to run. You may want to run it locally first and export/import the database.
 
 ## Environment Variables
 
-### Backend (Railway/Render):
+### Backend (DigitalOcean/Render):
 - `DATABASE_URL` - PostgreSQL connection string (auto-provided)
 - `REDIS_URL` - Optional Redis URL
 - `LOG_LEVEL` - Set to `INFO`
@@ -124,6 +96,6 @@ Note: The full pipeline takes ~30 minutes to run. You may want to run it locally
 
 ## Monitoring
 
-- Railway: Check logs in dashboard at https://railway.app
+- DigitalOcean: Check logs in dashboard at https://cloud.digitalocean.com
 - Render: Check logs in dashboard at https://render.com
 - Vercel: Check logs with `vercel logs`

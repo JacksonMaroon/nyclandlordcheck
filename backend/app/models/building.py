@@ -21,7 +21,7 @@ class Building(Base):
     building_class = Column(String(10))
     latitude = Column(Float)
     longitude = Column(Float)
-    # Note: geom column removed - PostGIS not available on Railway
+    # Note: geom column omitted - using lat/long instead
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

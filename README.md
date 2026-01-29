@@ -125,12 +125,14 @@ python -m pipeline.runner --scoring
 
 ## Deployment
 
-### Backend (Railway)
+### Backend (DigitalOcean App Platform)
 
 ```bash
-# railway.toml is configured for auto-deploy
-railway up
+# digitalocean/app.yaml is configured for auto-deploy
+doctl apps create --spec digitalocean/app.yaml
 ```
+
+See [DEPLOY.md](DEPLOY.md) for full deployment instructions.
 
 ### Frontend (Vercel)
 

@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Enable required PostgreSQL extensions (PostGIS removed - not available on Railway)
+    # Enable required PostgreSQL extensions
     op.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm')
 
     # Create buildings table
@@ -39,7 +39,7 @@ def upgrade() -> None:
         sa.Column('building_class', sa.String(10)),
         sa.Column('latitude', sa.Float()),
         sa.Column('longitude', sa.Float()),
-        # Note: geom column removed - PostGIS not available on Railway
+        # Note: geom column omitted - using lat/long instead
         sa.Column('created_at', sa.DateTime(), server_default=sa.func.now()),
         sa.Column('updated_at', sa.DateTime(), server_default=sa.func.now(), onupdate=sa.func.now()),
     )
