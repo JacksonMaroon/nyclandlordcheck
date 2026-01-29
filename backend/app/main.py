@@ -11,7 +11,7 @@ from app.database import engine, Base, get_db
 from app.logging_config import setup_logging, get_logger
 from app.middleware import RequestLoggingMiddleware, ErrorHandlingMiddleware
 from app.cache import close_cache
-from pipeline.runner import run_all, run_extractor, run_scoring, EXTRACTORS
+from pipeline.runner import run_all, run_extractor, run_scoring, run_entity_resolution, EXTRACTORS
 
 # Set up logging first
 setup_logging()
@@ -130,3 +130,11 @@ async def trigger_scoring(background_tasks: BackgroundTasks):
     logger.info("Received scoring trigger request")
     background_tasks.add_task(run_scoring)
     return {"message": "Scoring triggered in background"}
+
+
+@app.post("/admin/pipeline/entity-resolution")
+async def trigger_entity_resolution(background_tasks: BackgroundTasks):
+    """Trigger entity resolution as a background task."""
+    logger.info("Received entity resolution trigger request")
+    background_tasks.add_task(run_entity_resolution)
+    return {"message": "Entity resolution triggered in background"}
