@@ -293,7 +293,7 @@ class BuildingService:
         return [
             {
                 "id": v.violation_id,
-                "class": v.violation_class,
+                "violation_class": v.violation_class,
                 "status": v.current_status,
                 "inspection_date": v.inspection_date.isoformat() if v.inspection_date else None,
                 "description": v.nov_description,
@@ -399,7 +399,7 @@ class BuildingService:
             
             violations.append({
                 "id": violation.violation_id,
-                "class": violation.violation_class,
+                "violation_class": violation.violation_class,
                 "status": violation.current_status,
                 "inspection_date": violation.inspection_date.isoformat() if violation.inspection_date else None,
                 "description": violation.nov_description,
