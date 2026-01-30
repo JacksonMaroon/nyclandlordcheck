@@ -9,10 +9,6 @@ import { OwnerCard } from '@/components/building/OwnerCard';
 import { ViolationTimeline } from '@/components/building/ViolationTimeline';
 import { BuildingDetails } from '@/components/building/BuildingDetails';
 
-// Force dynamic rendering - don't cache building pages
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 interface Props {
   params: { bbl: string };
 }
