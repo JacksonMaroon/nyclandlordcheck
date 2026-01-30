@@ -1,11 +1,17 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowLeft, MapPin, Building2 } from 'lucide-react';
 import { getBuilding } from '@/lib/api';
 import { ScoreCard } from '@/components/building/ScoreCard';
 import { ViolationSummary } from '@/components/building/ViolationSummary';
 import { OwnerCard } from '@/components/building/OwnerCard';
 import { ViolationTimeline } from '@/components/building/ViolationTimeline';
 import { BuildingDetails } from '@/components/building/BuildingDetails';
+
+// Force dynamic rendering - don't cache building pages
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface Props {
   params: { bbl: string };
@@ -38,35 +44,59 @@ export default async function BuildingPage({ params }: Props) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {building.address}
-        </h1>
-        <p className="text-gray-600">
-          {building.borough} | BBL: {building.bbl}
-        </p>
-      </div>
+    <div className="bg-[#FAF7F2] min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[#C65D3B] hover:underline text-sm mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Search
+        </Link>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Score & Summary */}
-        <div className="lg:col-span-1 space-y-6">
-          <ScoreCard score={building.score} />
-          <ViolationSummary violations={building.violations} />
-          {building.owner && <OwnerCard owner={building.owner} />}
-          <BuildingDetails building={building} />
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 text-[#8A8A8A] text-sm mb-2">
+            <MapPin className="w-4 h-4" />
+            <span>{building.borough}</span>
+            <span>•</span>
+            <span>BBL: {building.bbl}</span>
+          </div>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1A1A1A] mb-2">
+            {building.address}
+          </h1>
+          {building.total_units && (
+            <div className="flex items-center gap-2 text-[#4A4A4A]">
+              <Building2 className="w-4 h-4" />
+              <span>{building.total_units} units</span>
+            </div>
+          )}
         </div>
 
-        {/* Right Column - Timeline & Details */}
-        <div className="lg:col-span-2">
-          <Suspense fallback={<div>Loading timeline...</div>}>
-            <ViolationTimeline
-              bbl={building.bbl}
-              recentViolations={building.recent_violations}
-            />
-          </Suspense>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Score & Summary */}
+          <div className="lg:col-span-1 space-y-6">
+            <ScoreCard score={building.score} />
+            <ViolationSummary violations={building.violations} />
+            {building.owner && <OwnerCard owner={building.owner} />}
+            <BuildingDetails building={building} />
+          </div>
+
+          {/* Right Column - Timeline & Details */}
+          <div className="lg:col-span-2">
+            <Suspense fallback={
+              <div className="bg-white border border-[#D4CFC4] rounded-xl p-6 text-center text-[#8A8A8A]">
+                Loading timeline...
+              </div>
+            }>
+              <ViolationTimeline
+                bbl={building.bbl}
+                recentViolations={building.recent_violations}
+              />
+            </Suspense>
+          </div>
         </div>
       </div>
     </div>
