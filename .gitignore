@@ -17,6 +17,7 @@ __pycache__/
 .venv/
 venv/
 ENV/
+google-credentials.json
 
 # IDE
 .idea/

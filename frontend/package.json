@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "npm run index",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "index": "node scripts/index-urls.mjs",
+    "postdeploy": "npm run index"
   },
   "dependencies": {
     "next": "14.1.0",
