@@ -81,7 +81,7 @@ export function Footer() {
       {/* Footer Links */}
       <div className="container mx-auto px-4 md:px-8 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex gap-6 md:gap-8">
+          <div className="flex flex-wrap justify-center md:justify-start gap-6 md:gap-8">
             <Link href="/about" className="text-[#4A4A4A] hover:text-[#1A1A1A] text-xs transition-colors">
               About
             </Link>
@@ -98,7 +98,7 @@ export function Footer() {
               Privacy
             </Link>
           </div>
-          <div className="text-right">
+          <div className="text-center md:text-right">
             <p className="font-serif italic text-sm text-[#4A4A4A]">Trustworthy. Distinctly New York.</p>
             <p className="text-[10px] text-[#8A8A8A] mt-0.5">© 2026 NYCLandlordCheck</p>
           </div>
